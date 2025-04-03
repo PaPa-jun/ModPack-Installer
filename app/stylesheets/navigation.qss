@@ -27,4 +27,8 @@ ToggleButton:hover {
 
 ToggleButton[pressed="true"] {
     background-color: rgba(150, 150, 150, 0.4);
-} 
+}
+
+QLabel {
+    font-weight: bold;
+}
