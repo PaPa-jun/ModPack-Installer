@@ -1,6 +1,7 @@
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel
 from PyQt6.QtGui import QPixmap
 from PyQt6.QtCore import Qt, pyqtSignal, QSize
+from app.stylesheets.utlis import loadQss
 
 class NavigationItem(QWidget):
     """
@@ -53,24 +54,26 @@ class NavigationItem(QWidget):
         self.iconLabel.setPixmap(pixmap.scaledToWidth(24, Qt.TransformationMode.SmoothTransformation))
 
     def enterEvent(self, event):
-        self.setStyleSheet("NavigationItem {background-color: rgba(180, 180, 180, 0.3);}")
         self.setCursor(Qt.CursorShape.PointingHandCursor)
         return super().enterEvent(event)
     
     def leaveEvent(self, event):
-        self.setStyleSheet("NavigationItem {background-color: transparent;}")
         return super().leaveEvent(event)
 
     def mousePressEvent(self, event):
-        self.setStyleSheet("NavigationItem {background-color: rgba(150, 150, 150, 0.4);}")
+        self.setProperty("pressed", True)
+        self.style().unpolish(self)
+        self.style().polish(self)
         return super().mousePressEvent(event)
 
     def mouseReleaseEvent(self, event):
+        self.setProperty("pressed", False)
+        self.style().unpolish(self)
+        self.style().polish(self)
         if self.selected:
             return super().mouseReleaseEvent(event)    
         self.select()
         self.clickedSignal.emit(self.id)
-        self.setStyleSheet("NavigationItem {background-color: transparent;}")
         return super().mouseReleaseEvent(event)
 
 class NavigationList(QWidget):
@@ -111,8 +114,6 @@ class NavigationList(QWidget):
         self.topLayout.setSpacing(0)
         self.bottomLayout.setContentsMargins(0, 0, 0, 0)
         self.bottomLayout.setSpacing(0)
-
-        self.setStyleSheet("NavigationList {background-color: rgba(180, 180, 180, 0.2)};")
 
     def addItem(self, item: NavigationItem, area: str):
         if area == "top":
@@ -178,29 +179,29 @@ class ToggleButton(QWidget):
         self.label.setPixmap(self.collapsePixmap.scaledToWidth(24, Qt.TransformationMode.SmoothTransformation))
         self.mainLayout.addWidget(self.label)
 
-        self.setStyleSheet("ToggleButton {background-color: rgba(180, 180, 180, 0.3);}")
-
     def enterEvent(self, event):
-        self.setStyleSheet("ToggleButton {background-color: rgba(180, 180, 180, 0.4);}")
         self.setCursor(Qt.CursorShape.PointingHandCursor)
         return super().enterEvent(event)
     
     def leaveEvent(self, event):
-        self.setStyleSheet("ToggleButton {background-color: rgba(180, 180, 180, 0.3);}")
         return super().leaveEvent(event)
 
     def mousePressEvent(self, event):
-        self.setStyleSheet("ToggleButton {background-color: rgba(150, 150, 150, 0.4);}")
+        self.setProperty("pressed", True)
+        self.style().unpolish(self)
+        self.style().polish(self)
         return super().mousePressEvent(event)
 
     def mouseReleaseEvent(self, event):
+        self.setProperty("pressed", False)
+        self.style().unpolish(self)
+        self.style().polish(self)
         self.expand = not self.expand
         if self.expand:
             self.label.setPixmap(self.collapsePixmap.scaledToWidth(24, Qt.TransformationMode.SmoothTransformation))
         else:
             self.label.setPixmap(self.expandPixmap.scaledToWidth(24, Qt.TransformationMode.SmoothTransformation))
         self.toggledSignal.emit(self.expand)
-        self.setStyleSheet("ToggleButton {background-color: rgba(180, 180, 180, 0.3);}")
         return super().mouseReleaseEvent(event)
 
 class NavigationBar(QWidget):
@@ -212,6 +213,7 @@ class NavigationBar(QWidget):
 
     def __init__(self):
         super().__init__()
+        self.setStyleSheet(loadQss("navigation.qss"))
         self.iniUi()
 
     def iniUi(self):

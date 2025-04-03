@@ -1,0 +1,30 @@
+/* NavigationItem */
+NavigationItem {
+    background-color: transparent;
+}
+
+NavigationItem:hover {
+    background-color: rgba(180, 180, 180, 0.3);
+}
+
+NavigationItem[pressed="true"] {
+    background-color: rgba(150, 150, 150, 0.4);
+}
+
+/* NavigationList */
+NavigationList {
+    background-color: rgba(180, 180, 180, 0.2);
+}
+
+/* ToggleButton */
+ToggleButton {
+    background-color: rgba(180, 180, 180, 0.3);
+}
+
+ToggleButton:hover {
+    background-color: rgba(180, 180, 180, 0.4);
+}
+
+ToggleButton[pressed="true"] {
+    background-color: rgba(150, 150, 150, 0.4);
+} 
