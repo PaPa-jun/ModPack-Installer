@@ -1,6 +1,8 @@
 from PyQt6.QtWidgets import QMainWindow, QWidget, QHBoxLayout
 from PyQt6.QtCore import QSize
 from app.views.home import HomePage
+from app.widgets.navigation import NavigationList, NavigationItem, NavigationBar
+from app.stylesheets.utlis import loadQss
 
 class MainWindow(QMainWindow):
 
@@ -17,3 +19,15 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(centralWidget)
         self.centraLayout = QHBoxLayout()
         centralWidget.setLayout(self.centraLayout)
+        self.centraLayout.setContentsMargins(0, 0, 0, 0)
+        self.centraLayout.setSpacing(0)
+
+        self.navBar = NavigationBar()
+        self.centraLayout.addWidget(self.navBar)
+
+        homeButton = NavigationItem("assets/icons/home.svg", "Home")
+        importButton = NavigationItem("assets/icons/import.svg", "Import")
+        settingsButton = NavigationItem("assets/icons/settings.svg", "Settings")
+
+        self.navBar.navigationList.addItems([homeButton, importButton], "top")
+        self.navBar.navigationList.addItem(settingsButton, "bottom")

@@ -12,12 +12,13 @@ class CurseForgeClient(QThread):
             'Accept': 'application/json',
             'x-api-key': apiKey
         }
-
         self.func = None
+        self.args = None
         self.kwargs = None
 
-    def setTask(self, func, **kwargs):
+    def setTask(self, func, *args, **kwargs):
         self.func = func
+        self.args = args
         self.kwargs = kwargs
 
     def clearTask(self):
@@ -109,8 +110,7 @@ class CurseForgeClient(QThread):
         """
         Get all Minecraft versions.
         """
-        version_manifest_url = "https://launchermeta.mojang.com/mc/game/version_manifest.json"
-        response = requests.get(version_manifest_url)
+        response = requests.get("https://launchermeta.mojang.com/mc/game/version_manifest.json", headers=self.headers)
         data = response.json()
         
         versions = {
@@ -132,13 +132,13 @@ class CurseForgeClient(QThread):
         
         return versions
     
-    def run(self,):
+    def run(self):
         if self.func is None:
             self.requestFinishSignal.emit(None, "No task specified")
             return
         
         try:
-            result = self.func(**self.kwargs)
+            result = self.func(*self.args, **self.kwargs)
             self.requestFinishSignal.emit(result, "")
             self.clearTask()
         except Exception as e:
